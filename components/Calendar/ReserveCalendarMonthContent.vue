@@ -96,6 +96,7 @@ export default {
       'Party',
     ],
     dayOfTheWeekLists: ['日', '月', '火', '水', '木', '金', '土'],
+    searchList: ['test1', 'test2'],
   }),
   methods: {
     getEventColor(event) {

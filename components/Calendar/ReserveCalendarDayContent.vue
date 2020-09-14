@@ -9,7 +9,23 @@
       :customer-lists="customerLists"
       :date-item="dateItem"
       :business-time="apiData.business_time"
+      @openFrom="openReservationForm"
     >
+      <template #ReservationForm>
+        <ReservationForm
+          v-if="showReservationForm"
+          :names="customerLists"
+          :therapists="apiData.terapisLists"
+          :units="apiData.unitLists"
+          :courses="apiData.courseLists"
+          :value="showReservationForm"
+          :date="
+            new Date(dateItem.year + '/' + dateItem.month + '/' + dateItem.day)
+          "
+          :customer-list="sendFormCustomerData"
+          @input="closeReservationForm"
+        />
+      </template>
     </ReserveCalendarCommon>
     <ReserveCalendarCommon
       v-else
@@ -20,7 +36,23 @@
       :customer-lists="customerLists"
       :date-item="dateItem"
       :business-time="apiData.business_time"
+      @openFrom="openReservationForm"
     >
+      <template #ReservationForm>
+        <ReservationForm
+          v-if="showReservationForm"
+          :names="customerLists"
+          :therapists="apiData.terapisLists"
+          :units="apiData.unitLists"
+          :courses="apiData.courseLists"
+          :value="showReservationForm"
+          :date="
+            new Date(dateItem.year + '/' + dateItem.month + '/' + dateItem.day)
+          "
+          :customer-list="sendFormCustomerData"
+          @input="closeReservationForm"
+        />
+      </template>
     </ReserveCalendarCommon>
   </div>
 </template>
@@ -47,6 +79,9 @@ export default {
   data() {
     return {
       times: [],
+      searchList: ['test1', 'test2'],
+      showReservationForm: false,
+      sendFormCustomerData: null,
     }
   },
   created() {
@@ -69,6 +104,14 @@ export default {
     calcBusinessTime(startDate, endDate) {
       const difftime = endDate.getHours() - startDate.getHours()
       return difftime
+    },
+    openReservationForm(data) {
+      console.log(data)
+      this.sendFormCustomerData = data
+      this.showReservationForm = true
+    },
+    closeReservationForm() {
+      this.showReservationForm = false
     },
   },
 }

@@ -1,5 +1,7 @@
 <template>
   <div class="box" style="width: 100%">
+    <!-- Reservation Form -->
+    <slot name="ReservationForm"></slot>
     <!-- header -->
     <div class="d-flex header">
       <div class="first-content" style="min-width: 200px; max-width: 200px">
@@ -127,6 +129,7 @@
                     customerList.start
                   )
                 "
+                @boxClick="openReservationForm(customerList)"
               />
             </div>
           </div>
@@ -151,6 +154,7 @@
                     customerList.start
                   )
                 "
+                @boxClick="openReservationForm(customerList)"
               />
             </div>
           </div>
@@ -158,6 +162,7 @@
             v-for="(time, timeIndex) in times"
             :key="timeIndex"
             class="d-flex table-row"
+            @click="openReservationForm(null)"
           >
             <!-- close secondList -->
             <div
@@ -258,6 +263,7 @@ export default Vue.extend({
       activeNumber: -1,
       openSecondListIndex: [],
       customCustomerLists: [],
+      showReservationForm: false,
     }
   },
   computed: {
@@ -272,8 +278,8 @@ export default Vue.extend({
       }
     },
     cheackActiveSecondList() {
-      return function (index: number) {
-        const result = this.openSecondListIndex.some(function (value: number) {
+      return function (index) {
+        const result = this.openSecondListIndex.some(function (value) {
           return value === index
         })
         return result
@@ -289,10 +295,10 @@ export default Vue.extend({
     this.openSecondListIndex = []
   },
   methods: {
-    boxShadow(customerList: any) {
+    boxShadow(customerList) {
       const resault = []
       if (this.radios) {
-        this.customerLists.forEach((list: any) => {
+        this.customerLists.forEach((list) => {
           if (list.customerId === customerList.customerId) return false
           if (list.unitId !== customerList.unitId) return false
           if (list.start.getFullYear() !== customerList.start.getFullYear())
@@ -306,7 +312,7 @@ export default Vue.extend({
           }
         })
       } else {
-        this.customerLists.forEach((list: any) => {
+        this.customerLists.forEach((list) => {
           if (list.customerId === customerList.customerId) return false
           if (list.unitId !== customerList.unitId) return false
           if (list.terapisNameId !== customerList.terapisNameId) return false
@@ -324,31 +330,31 @@ export default Vue.extend({
       if (resault.length > 0) return true
       return false
     },
-    openSecondList(index: never) {
+    openSecondList(index) {
       this.openSecondListIndex.push(index)
     },
-    closeSecondList(firstListIndex: number) {
+    closeSecondList(firstListIndex) {
       const index = this.openSecondListIndex.findIndex(
         (v) => v === firstListIndex
       )
       this.openSecondListIndex.splice(index, 1)
     },
-    DateComparison(dateItem: any, date: Date) {
+    DateComparison(dateItem, date) {
       if (!dateItem) return false
       if (dateItem.year !== date.getFullYear()) return false
       if (dateItem.month !== date.getMonth() + 1) return false
       if (dateItem.day !== date.getDate()) return false
       return true
     },
-    cheackIndexId(customerList: any, firstList: any, cheackId: number) {
+    cheackIndexId(customerList, firstList, cheackId) {
       const id = this.radios ? customerList.unitId : customerList.terapisNameId
-      const resault = firstList.findIndex((object: any) => {
+      const resault = firstList.findIndex((object) => {
         return object.id === id
       })
       if (cheackId === resault) return true
       return false
     },
-    calcReservationBoxPlaceY(openDate: Date, reservationDate: Date) {
+    calcReservationBoxPlaceY(openDate, reservationDate) {
       const diffHours = Math.abs(
         openDate.getHours() - reservationDate.getHours()
       )
@@ -356,12 +362,15 @@ export default Vue.extend({
         ((diffHours * 60 + reservationDate.getMinutes()) / 10) * 20
       return diffMinitu
     },
-    calcReservationSmallBoxPlaceX(customerList: any, firstLists: any) {
+    calcReservationSmallBoxPlaceX(customerList, firstLists) {
       const id = this.radios ? customerList.terapisNameId : customerList.unitId
-      const resault = firstLists.findIndex((object: any) => {
+      const resault = firstLists.findIndex((object) => {
         return object.id === id
       })
       return resault
+    },
+    openReservationForm(data) {
+      this.$emit('openFrom', data)
     },
   },
 })

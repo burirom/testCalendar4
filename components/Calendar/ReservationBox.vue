@@ -7,9 +7,12 @@
         customerInfo.nomination ? 'nomination-box' : 'no-nomination-box',
         boxShadoweCheack ? 'box-sadow' : 'box-no-sadow',
       ]"
+      @click="boxClick"
     >
       <div v-if="rowWidth >= 100" class="text">
-        <div>{{ customerInfo.name }}</div>
+        <div>
+          {{ customerInfo.name.lastName }}{{ customerInfo.name.firstName }}様
+        </div>
         <div v-if="customerInfo.customerNumberOfPeople != 0">
           他{{ customerInfo.customerNumberOfPeople }}名
         </div>
@@ -87,6 +90,9 @@ export default Vue.extend({
       const diffMinute = Math.abs(diff) / (60 * 1000) + startTime.getMinutes()
       return Math.round(diffMinute)
     },
+    boxClick() {
+      this.$emit('boxClick')
+    },
   },
 })
 </script>
@@ -95,7 +101,6 @@ export default Vue.extend({
   position: absolute;
   width: var(---width);
   padding: 2px;
-  z-index: 9;
 }
 .reservation-content {
   margin: 1px;
@@ -103,6 +108,7 @@ export default Vue.extend({
   height: var(---height);
   left: var(---boxPlaceX);
   top: var(---boxPlaceY);
+  z-index: 10;
 }
 .nomination-box {
   background: #6e9eff;
@@ -123,7 +129,7 @@ export default Vue.extend({
   }
 }
 .box-sadow {
-  box-shadow: 3px 3px 5px #d3d3d3;
+  box-shadow: 3px 3px 5px #000;
 }
 .box-no-sadow {
   box-shadow: none;

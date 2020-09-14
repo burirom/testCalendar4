@@ -20,18 +20,15 @@
         <!-- close secondList -->
         <div
           v-if="!cheackActiveSecondList(firstIndex)"
-          class="second-item second-row icon-box"
+          class="second-item second-row icon-box second-row-text"
         >
           <div
-            v-if="radios"
-            class="first-row second-row-text d-flex align-center justify-center"
+            v-if="!radios"
+            class="first-row d-flex align-center justify-center"
           >
             担当者表示
           </div>
-          <div
-            v-else
-            class="first-row second-row-text d-flex align-center justify-center"
-          >
+          <div v-else class="first-row d-flex align-center justify-center">
             ユニット表示
           </div>
           <v-icon class="icon-btn" @click="openSecondList(firstIndex)">
@@ -39,16 +36,19 @@
           </v-icon>
         </div>
         <!-- open secondList -->
-        <div v-else class="d-flex icon-box second-item second-row">
+        <div
+          v-else
+          class="d-flex icon-box second-item second-row second-row-text"
+        >
           <div
             v-for="(secondList, secondListIndex) in secondLists"
             :key="secondListIndex"
             class="border-right second-col-Width d-flex align-center justify-center"
           >
-            <div v-if="radios" class="second-row-text">
+            <div v-if="!radios">
               {{ secondList.terapisName.substring(0, 1) }}
             </div>
-            <div v-else class="second-row-text">
+            <div v-else>
               {{ secondList.unitName.substring(0, 1) }}
             </div>
           </div>
@@ -141,7 +141,7 @@
             <!-- close secondList -->
             <div
               v-if="!cheackActiveSecondList(firstIndex)"
-              class="table-row"
+              class="table-row testssssss"
               style="width: 100%"
             >
               <p class="calender-time-table ma-0 pl-2 pr-2"></p>
@@ -152,12 +152,19 @@
               <p class="calender-time-table ma-0 pl-2 pr-2"></p>
             </div>
             <!-- open secondList -->
-            <div v-else class="d-flex table-row testssssss">
+            <div v-else class="d-flex table-row">
               <div
                 v-for="(secondList, secondListIndex) in secondLists"
                 :key="secondListIndex"
                 class="border-right second-col-Width"
               >
+                <div v-if="radios">
+                  <div
+                    v-if="!secondList.available"
+                    class="available-unit"
+                    style="width: 40px"
+                  ></div>
+                </div>
                 <p class="calender-time-table ma-0 pl-2 pr-2"></p>
                 <p class="calender-time-table ma-0 pl-2 pr-2"></p>
                 <p class="calender-time-table ma-0 pl-2 pr-2"></p>
@@ -287,6 +294,14 @@ export default Vue.extend({
 })
 </script>
 <style lang="scss" scoped>
+.available-unit {
+  position: absolute;
+  background: #696969;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
+  opacity: 0.4;
+}
 .box {
   overflow: auto;
   border: 1px solid #c3c3c3;
@@ -301,6 +316,10 @@ export default Vue.extend({
       border: none;
     }
   }
+  .second-row-text {
+    color: #a0a0a0;
+    font-size: 11px;
+  }
   .second-item {
     border-bottom: 1px solid #c3c3c3;
   }
@@ -312,10 +331,6 @@ export default Vue.extend({
   }
   .second-row {
     height: 40px;
-  }
-  .second-row-text {
-    font-size: 11px;
-    color: #a0a0a0;
   }
 }
 .body {
@@ -336,6 +351,7 @@ export default Vue.extend({
   }
   .table-row {
     border-bottom: 1px solid #c3c3c3;
+    position: relative;
     &:last-child {
       border: none;
     }
@@ -358,7 +374,7 @@ export default Vue.extend({
     bottom: 0;
     right: 0;
     transform: translateY(-50%) translateX(50%);
-    z-index: 999;
+    z-index: 10;
     border-radius: 50%;
     border: 1px solid #c3c3c3;
   }
@@ -377,6 +393,7 @@ export default Vue.extend({
 .second-col-Width {
   width: 40px;
   min-width: 40px;
+  height: 100%;
 }
 .posion-rl {
   position: relative;

@@ -1,25 +1,8 @@
+```
 <template>
   <div>
     <ReserveCalendarWeekCommon
       v-if="radios"
-      :times="times"
-      :first-lists="daysData"
-      :second-lists="apiData.terapisLists"
-      :radios="radios"
-      :customer-lists="customerLists"
-      :date-item="dateItem"
-      :business-time="apiData.business_time"
-    >
-      <template #summaryItem>
-        <div>
-          <ReserveWeekNumberBox
-            :number-of-reservations-per="apiData.numberOfReservationsPer"
-          />
-        </div>
-      </template>
-    </ReserveCalendarWeekCommon>
-    <ReserveCalendarWeekCommon
-      v-else
       :times="times"
       :first-lists="days"
       :second-lists="apiData.unitLists"
@@ -33,6 +16,63 @@
           <ReserveWeekNumberBox
             :number-of-reservations-per="apiData.numberOfReservationsPer"
           />
+          <div class="d-flex">
+            <div>ユニット別</div>
+            <v-icon v-if="activeSelectList" @click="closeList"
+              >mdi-chevron-down</v-icon
+            >
+            <v-icon v-else @click="openList">mdi-chevron-up</v-icon>
+          </div>
+          <div v-if="activeSelectList">
+            <div v-for="(unitList, index) in apiData.unitLists" :key="index">
+              <v-checkbox
+                v-model="selectUnitLists[index]"
+                :label="unitList.unitName"
+                color="primary"
+                value="primary"
+                hide-details
+              ></v-checkbox>
+            </div>
+          </div>
+        </div>
+      </template>
+    </ReserveCalendarWeekCommon>
+    <ReserveCalendarWeekCommon
+      v-else
+      :times="times"
+      :first-lists="daysData"
+      :second-lists="apiData.terapisLists"
+      :radios="radios"
+      :customer-lists="customerLists"
+      :date-item="dateItem"
+      :business-time="apiData.business_time"
+    >
+      <template #summaryItem>
+        <div>
+          <ReserveWeekNumberBox
+            :number-of-reservations-per="apiData.numberOfReservationsPer"
+          />
+          <div class="d-flex">
+            <div>担当者</div>
+            <v-icon v-if="activeSelectList" @click="closeList"
+              >mdi-chevron-down</v-icon
+            >
+            <v-icon v-else @click="openList">mdi-chevron-up</v-icon>
+          </div>
+          <div v-if="activeSelectList">
+            <div
+              v-for="(terapistList, index) in apiData.terapisLists"
+              :key="index"
+            >
+              <v-checkbox
+                v-model="selectTerapisLists[index]"
+                :label="terapistList.terapisName"
+                color="primary"
+                value="primary"
+                hide-details
+              ></v-checkbox>
+            </div>
+          </div>
         </div>
       </template>
     </ReserveCalendarWeekCommon>
@@ -62,7 +102,10 @@ export default {
     return {
       times: [],
       days: [],
-      activeLists: [1, 2],
+      searchList: ['test1', 'test2'],
+      selectUnitLists: [],
+      selectTerapisLists: [],
+      activeSelectList: true,
     }
   },
   computed: {
@@ -74,9 +117,27 @@ export default {
   created() {
     if (this.apiData) this.setTimes()
     this.setDays()
-    this.filterTerapisLists(this.activeLists)
+    this.setSelectLists()
   },
   methods: {
+    openList() {
+      this.activeSelectList = true
+    },
+    closeList() {
+      this.activeSelectList = false
+    },
+    setSelectLists() {
+      for (let i = 0; i < this.apiData.unitLists.length; i++) {
+        this.selectUnitLists.push({
+          active: true,
+        })
+      }
+      for (let i = 0; i < this.apiData.terapisLists.length; i++) {
+        this.selectTerapisLists.push({
+          active: true,
+        })
+      }
+    },
     setTimes() {
       this.times = []
       const businesstTime = this.calcBusinessTime(
@@ -106,12 +167,6 @@ export default {
         daysDate.setDate(daysDate.getDate() + 1)
       }
     },
-    filterTerapisLists(activeLists) {
-      const newArray = this.apiData.terapisLists.filter(function (list) {
-        return !activeLists.includes(list.id)
-      })
-      console.log(newArray)
-    },
     // calc
     // calc Business Time diff
     calcBusinessTime(startDate, endDate) {
@@ -121,3 +176,4 @@ export default {
   },
 }
 </script>
+```
